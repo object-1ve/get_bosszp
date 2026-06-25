@@ -1,0 +1,55 @@
+# === Output ===
+output/
+
+# === Python ===
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+db/
+
+
+
+# Virtual environment
+py/.venv/
+py/venv/
+.venv/
+venv/
+
+# === Node / JS ===
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# === JS 逆向分析临时文件（大体积，从目标站点下载的混淆 JS） ===
+*.downloaded.js
+
+# === IDE & Editor ===
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+.codegraph/
+*.zip
+*.sql
+trash/
+example/
+requests_log/
+
+# === OS ===
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === Claude 项目配置（本地私有，不应提交） ===
+py/.claude/
+.claude/
+
+# === Logs ===
+*.log
