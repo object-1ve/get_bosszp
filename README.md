@@ -2,6 +2,8 @@
 
 > 基于结构化项目组织的 BOSS 直聘职位数据采集工具。支持关键词搜索、多维度筛选、职位详情获取、自动 `__zp_stoken__` 刷新、数据持久化存储。
 
+本人爱慕虚荣，请大家多多star啊！！！
+
 [![Python Version](https://img.shields.io/badge/python-%3E%3D3.11-blue)]()
 [![License](https://img.shields.io/badge/license-MIT-green)]()
 
