@@ -67,7 +67,7 @@ def search_jobs(
     page_size: int = 15,
     city: str = "101010100",
     query: str = "",
-    retry: int = 0,
+    retry: int = 1,
     job_type: str = "",
     salary: str = "",
     experience: str = "",

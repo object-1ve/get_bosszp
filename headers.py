@@ -4,62 +4,54 @@ import requests
 headers = {
     "accept": "application/json, text/plain, */*",
     "accept-language": "zh-CN,zh;q=0.9",
-    "content-type": "application/x-www-form-urlencoded",
-    "origin": "https://www.zhipin.com",
     "priority": "u=1, i",
-    "referer": "https://www.zhipin.com/web/geek/jobs?query=agent%E5%BC%80%E5%8F%91&city=101210700&industry=&position=",
+    "referer": "https://www.zhipin.com/web/geek/jobs?city=101020100&experience=108,102,103",
     "sec-ch-ua": "\"Google Chrome\";v=\"149\", \"Chromium\";v=\"149\", \"Not)A;Brand\";v=\"24\"",
     "sec-ch-ua-mobile": "?0",
     "sec-ch-ua-platform": "\"Windows\"",
     "sec-fetch-dest": "empty",
     "sec-fetch-mode": "cors",
     "sec-fetch-site": "same-origin",
-    "token": "4Gp9NzxHchORpTmR",
-    "traceid": "F-0019eff16bdb0fCoHPILAH",
+    "token": "4Pm2eSyFGvAwfao8",
+    "traceid": "F-0019f023677falqnNvJzdD",
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36",
     "x-requested-with": "XMLHttpRequest",
-    "zp_token": "V2Rt4hGO3-3l1uVtRuxx4ZICq27DrRwi0~|Rt4hGO3-3l1uVtRuxx4ZICq27DrRwyU~"
+    "zp_token": "V2R9IkF-L53V9uVtRuxx4ZICq27DrezCg~|R9IkF-L53V9uVtRuxx4ZICq27DrSwio~"
 }
 cookies = {
     "lastCity": "101210700",
     "__g": "-",
-    "Hm_lvt_194df3105ad7148dcf2b98a91b5e727a": "1782392159",
-    "HMACCOUNT": "559211D9059B35F8",
-    "ab_guid": "6173aa68-a750-4447-b4a8-c44553737cc3",
-    "__l": "l=%2Fwww.zhipin.com%2Fwenzhou%2F%3FseoRefer%3Dindex&r=&g=&s=3&friend_source=0&s=3&friend_source=0",
-    "Hm_lpvt_194df3105ad7148dcf2b98a91b5e727a": "1782395961",
-    "wt2": "DxrPNSah1CbsK1E4UOEHxg7bLfbGpxXY2E9hsD3SbEa9n10J9KE6ALFn_DVO85Z_x1NDJ3lUTgmYbevhttzW2Vg~~",
+    "Hm_lvt_194df3105ad7148dcf2b98a91b5e727a": "1782448032",
+    "Hm_lpvt_194df3105ad7148dcf2b98a91b5e727a": "1782448032",
+    "HMACCOUNT": "4643CEA1B0154B7F",
+    "ab_guid": "1b08e35e-3e3b-4212-b9c5-31544d3388be",
+    "gdxidpyhxdE": "6P%2FDztGeSWNddvw%2Frx5x2nIBcgl4Lqt%2B6Wr4rgz%5C77be60D%2Fl7M84obWzmvA3icbgusTj41%2FAOsYZRprQ2il8gDSQgE8hves6oumlxO15UdwlqRSyZNT62hlPX%2Bx448YwB5fWX65wShSxcvyxTUq%5Cn1xRJRY1TJ6Dn3A%5CiW9bLUCN8Sd%3A1782448952239",
+    "wt2": "DtwkLqX_55rjhST4PBdeu8VpZuYo0rTmiVOTNQ-SIJW5OWBl6d2hrnfeh2CfgY2B-Dmh04vTEo7aTt5ITBbjk5Q~~",
     "wbg": "0",
-    "zp_at": "4iyWXR3bDFFKEe4GfQpeuwq8S_nU9lXO6MCg0ASzLlI~",
-    "__zp_stoken__": "71f3gQDjDhsK5w67DgT8pDzhAJEE0OUA4NzI7QDhkJD09NTZBOB8fw5YFfFvDhcKJwr1DLzg3QUBAOjc0Nx84Qzk9QD80OcS6wr09NDnCsUMoEhbDnRF0XMOJEW7CuALDpcK9ETYCMsOAERkrKQURCQ4MYWMGEwRXEVtSYGAHBlIEY2FbB2BXAlgGEw4CFRc6wp3CtDXCvEnCtD3Dg0bDgD3CuzU2OT0tOVbCqS0dPDQ0QDU2xLnEtsS6xLrEt8S5xLbEusOCw7LDncS2xLrEusKyxLnEtsS6w7rDksS5xLbEusS6w7XCti9AwpHCtcOJxbTDh8KcxJ3FqMOOwqjEnMOiw5%2FCh8OJw6%2FDlMKVxLrEg8Ohw4DDosODxK3Cp8S3wr3Dv8KZxLLCs8SywozCiMKXw73DgMOCw4DDjF7Dv0rDsVbCm1HDpcK%2FwpjCr8O9XMKiUcO4bcK%2BwqrDv8Kmw7VQwovCrsKnU0LCtsKbwrXCiWlVZsK%2Ff8Kkwq1deUdWc8OBWm5Jb8K6a8ODamcHWxFdDgg5UsOIw4bDhA%3D%3D",
-    "__c": "1782392159",
-    "__a": "90051984.1782392159..1782392159.16.1.16.16",
-    "bst": "V2Rt4hGO3-3l1uVtRuxx4ZICq27DrRwi0~|Rt4hGO3-3l1uVtRuxx4ZICq27DrRwyU~"
+    "zp_at": "RxyU7EYnPPEGgGnZhEfLNotAyqpJ6lSrlp1dzAf5Id0~",
+    "__c": "1782448032",
+    "__l": "l=%2Fwww.zhipin.com%2Fweb%2Fgeek%2Fjobs%3Fcity%3D101020100%26experience%3D108%2C102%2C103&s=3&friend_source=0&s=3&friend_source=0",
+    "__a": "35755056.1782448032..1782448032.7.1.7.7",
+    "bst": "V2R9IkF-L53V9uVtRuxx4ZICq27DrezCg~|R9IkF-L53V9uVtRuxx4ZICq27DrSwio~",
+    "__zp_stoken__": "c66fgw5XDiVsTOG8WFm0SXMKDw4fDgMKFwoxXwqjCh8KoccKzwrjCu1jCvsOCwrZlwqRxwqlIwovCv1daX0jCnWnCs0jDhcKyw4xcw4ZWwqJYwrPCmcKYxJ7DqlRhxINIwrrCkDs9w4TDusS5xYXEuMWHw6XDucWFxLjFh8OFxLnFhcS4w6PEhcORxYXEuMWHxYTEucWFxLjFhzlGOzo%2BTx4qwqtkPi46O0Q6w4DCocOEw5PDjMKtwrnDnMOCwqHCuiFMGRoRCREUWxFsZglYWlgKWAkQW2ZYWApsCh0JZF4SHA4KEis1MirCuzIIwrtzDj8IwrrCow7Di2bChEfCrcK6wqAvNzjCt0Q4RsK6xLhEOD47O0RPRyRBOTtBOzpMO0c0RcK1wqbDjmB5OcKtw4fCkhlBQj46O0QrdDs6RjlHOzpAO0E3Okx2KUzDh8OrwrrDjjs6"
 }
-url = "https://www.zhipin.com/wapi/zpgeek/search/joblist.json"
+url = "https://www.zhipin.com/wapi/zpgeek/pc/recommend/job/list.json"
 params = {
-    "_": "1782396140976"
-}
-data = {
     "page": "1",
     "pageSize": "15",
-    "city": "101210700",
-    "query": "agent开发",
+    "city": "101020100",
+    "experience": "108,102,103",
+    "encryptExpectId": "",
+    "mixExpectType": "",
     "expectInfo": "",
-    "multiSubway": "",
-    "multiBusinessDistrict": "",
-    "position": "",
     "jobType": "",
     "salary": "",
-    "experience": "",
     "degree": "",
     "industry": "",
     "scale": "",
-    "stage": "",
-    "scene": "1",
-    "encryptExpectId": ""
+    "_": "1782448551930"
 }
-response = requests.post(url, headers=headers, cookies=cookies, params=params, data=data)
+response = requests.get(url, headers=headers, cookies=cookies, params=params)
 
 print(response.text)
 print(response)

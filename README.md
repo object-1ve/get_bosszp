@@ -7,6 +7,10 @@
 [![Python Version](https://img.shields.io/badge/python-%3E%3D3.11-blue)]()
 [![License](https://img.shields.io/badge/license-MIT-green)]()
 
+## 作者有话说(非ai)
+
+逆向接口存在被封号的风险,不如脚本猫一把梭^v^.
+
 ---
 
 ## 目录
@@ -21,6 +25,7 @@
   - [查看职位详情](#查看职位详情)
   - [刷新 Cookie 配置](#刷新-cookie-配置)
 - [数据模型](#数据模型)
+- [scriptsCat — 脚本猫自动采集](#scriptscat--脚本猫自动采集)
 - [架构说明](#架构说明)
   - [项目结构](#项目结构)
   - [模块职责](#模块职责)
@@ -186,6 +191,57 @@ python update.py
 
 ---
 
+## scriptsCat — 脚本猫自动采集
+
+`scriptsCat/` 提供了一套基于 [脚本猫（ScriptCat）](https://scriptcat.org/) 的替代采集方案，实现"浏览器自动点击 → 拦截 API 响应 → 导出 JSON → Python 入库"的完整链路，无需逆向加密参数。
+
+### 文件说明
+
+| 文件 | 说明 |
+|------|------|
+| `bosszpAuto.js` | 脚本猫脚本（v1.3），安装后在 Boss 直聘搜索页注入操作按钮 |
+| `detail.json` | 脚本导出的原始职位详情数据 |
+| `sqliteInit.py` | Python 脚本，将 `detail.json` 解析并写入 `detail.db` |
+| `detail.db` | SQLite 数据库，存储结构化的职位、Boss、公司信息 |
+
+### 脚本功能（bosszpAuto.js）
+
+安装 [脚本猫](https://scriptcat.org/) 后导入此脚本，访问 Boss 直聘搜索页时页面右下角会出现操作面板：
+
+- **▶ 开始自动点击** — 自动逐个点击职位卡片，触发详情 API 请求，支持无限滚动自动加载下一批
+- **📦 导出JSON** — 将缓存的所有 `job/detail.json` 响应导出为文件，导出后自动清空缓存
+- **🗑 清空缓存** — 手动清空已拦截的数据
+
+脚本通过拦截 XHR 和 Fetch 请求中的 `job/detail.json` 接口，自动缓存每条职位的完整详情数据（含公司、Boss、地址等）。
+
+### 数据入库
+
+```bash
+cd scriptsCat
+python sqliteInit.py
+```
+
+解析 `detail.json` 并写入 `detail.db`，包含四张表：
+
+| 表名 | 内容 |
+|------|------|
+| `jobs` | 职位信息（名称、城市、薪资、经验要求、技能标签等） |
+| `bosses` | 招聘者信息（姓名、头衔、头像、在线状态） |
+| `companies` | 公司信息（名称、规模、融资阶段、行业） |
+| `job_details` | 关联表，串联职位、Boss、公司三者关系 |
+
+> **注意**：`detail.json` 可能包含多次导出的重复数据，脚本以 `encrypt_job_id` 为唯一键去重。`encrypt_user_id` 列为从接口响应中额外提取的 Boss 加密 ID，用于与主流程的数据对齐。
+
+### 使用流程
+
+1. 在脚本猫中导入 `bosszpAuto.js`
+2. 打开 Boss 直聘搜索页，点击"开始自动点击"
+3. 脚本自动遍历职位列表并拦截详情数据
+4. 点击"导出JSON"保存为 `detail.json`
+5. 运行 `python sqliteInit.py` 将数据写入 `detail.db`
+
+---
+
 ## 架构说明
 
 ### 项目结构
@@ -207,9 +263,14 @@ getData/
 ├── db/
 │   ├── schema.sql       # 数据库表结构（4 表 + 索引）
 │   └── import_data.py   # 导入数据到 SQLite
-└── webJs/
-    ├── traceid.py       # TraceID 生成与解码（原生 Python，无 JS 依赖）
-    └── {sname}.js       # BOSS 直聘加密 JS（自动下载，由 sname 标识）
+├── webJs/
+│   ├── traceid.py       # TraceID 生成与解码（原生 Python，无 JS 依赖）
+│   └── {sname}.js       # BOSS 直聘加密 JS（自动下载，由 sname 标识）
+└── scriptsCat/
+    ├── bosszpAuto.js    # 脚本猫脚本：自动点击职位 + 拦截 detail.json
+    ├── sqliteInit.py    # 将导出的 detail.json 写入 SQLite
+    ├── detail.json      # 脚本导出的原始职位详情数据
+    └── detail.db        # SQLite 数据库（职位/Boss/公司/关联四张表）
 ```
 
 ### 模块职责

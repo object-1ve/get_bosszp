@@ -27,17 +27,17 @@ import stoken as stoken_mod
 from db.import_data import get_conn, init_schema, import_detail, print_stats
 from utils import safe_filename, pad
 
-TOTAL_PAGES = 1  # ← 要抓的总页数（每页 PAGE_SIZE=15 条，固定值）
+TOTAL_PAGES = 5  # ← 要抓的总页数（每页 PAGE_SIZE=15 条，固定值）
 
 # ===== 配置 =====
 OUTPUT_DIR = os.path.join(BASE_DIR, "..", "output")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # ----- 搜索配置（在此修改筛选条件） -----
-SEARCH_QUERY = "agent开发"           # 搜索关键词
+SEARCH_QUERY = "后端开发"           # 搜索关键词
 CITY = "100010000"                  # 城市名称或编码（北京）
 PAGE_SIZE = 15                       # 每页数量（固定 15，API 不支持其他值）
-RETRY = 2                           # 重试次数
+RETRY = 3                           # 重试次数
 
 # 筛选参数（留空则不筛选，编码值参考 constants.py）
 SALARY = ""          # 薪资范围
