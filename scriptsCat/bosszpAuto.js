@@ -79,28 +79,144 @@
     // 样式
     // ============================================================
     GM_addStyle(`
-        #boss-auto-btn {
+        #boss-auto-panel {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
+            top: 20px;
+            right: 20px;
             z-index: 99999;
-            padding: 12px 24px;
-            border: none;
+            background: #fff;
+            border: 1px solid #00d7c6;
             border-radius: 8px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            transition: all 0.3s;
-            color: #fff;
-            background: #00d7c6;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            width: 320px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: height 0.3s ease;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
-        #boss-auto-btn:hover { transform: scale(1.05); }
-        #boss-auto-btn.running { background: #ff4d4f; }
+        #boss-auto-panel.collapsed { height: 42px !important; }
+        #boss-auto-panel.collapsed .panel-body { display: none; }
+        #panel-header {
+            background: #00d7c6;
+            color: white;
+            padding: 10px 15px;
+            cursor: move;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            flex-shrink: 0;
+        }
+        #panel-header h3 { margin: 0; font-size: 16px; color: white; border: none; }
+        #toggle-panel-btn {
+            background: rgba(255,255,255,0.2);
+            border: none; color: white;
+            width: 24px; height: 24px;
+            border-radius: 4px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 18px;
+        }
+        #toggle-panel-btn:hover { background: rgba(255,255,255,0.3); }
+        .panel-body {
+            padding: 12px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        .panel-body::-webkit-scrollbar { width: 4px; }
+        .panel-body::-webkit-scrollbar-thumb { background: #00d7c6; border-radius: 2px; }
+        .boss-panel-btn {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+            flex-shrink: 0;
+        }
+        #start-btn { background: #00d7c6; color: white; }
+        #start-btn:hover { background: #00b3a5; }
+        #stop-btn { background: #ff4d4f; color: white; }
+        #stop-btn:hover { background: #d9363e; }
+        #export-btn { background: #1890ff; color: white; }
+        #export-btn:hover { background: #40a9ff; }
+        #clear-btn { background: #8c8c8c; color: white; }
+        #clear-btn:hover { background: #595959; }
+        .filter-section { margin-bottom: 10px; }
+        .filter-section .info-label {
+            color: #999; font-size: 11px; margin-bottom: 4px;
+        }
+        .filter-section input[type="text"] {
+            width: 100%;
+            padding: 5px;
+            font-size: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .filter-section input[type="text"]:focus {
+            border-color: #00d7c6;
+            outline: none;
+        }
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            padding: 6px 8px;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+        .toggle-row label {
+            font-size: 13px;
+            color: #333;
+            cursor: pointer;
+            flex: 1;
+        }
+        .toggle-switch {
+            position: relative;
+            width: 36px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #ccc;
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+        .toggle-slider:before {
+            content: "";
+            position: absolute;
+            height: 16px; width: 16px;
+            left: 2px; bottom: 2px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+        .toggle-switch input:checked + .toggle-slider { background: #00d7c6; }
+        .toggle-switch input:checked + .toggle-slider:before { transform: translateX(16px); }
+        #status-info {
+            font-size: 12px; color: #666;
+            margin-top: 8px;
+            border-top: 1px solid #eee;
+            padding-top: 8px;
+        }
         #boss-auto-status {
             position: fixed;
-            bottom: 80px;
-            right: 30px;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 99999;
             background: rgba(0,0,0,0.75);
             color: #fff;
@@ -108,96 +224,115 @@
             border-radius: 6px;
             font-size: 13px;
             pointer-events: none;
+            white-space: nowrap;
         }
-        #boss-export-btn {
-            position: fixed;
-            bottom: 30px;
-            left: 30px;
-            z-index: 99999;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            color: #fff;
-            background: #1890ff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            transition: all 0.2s;
-        }
-        #boss-export-btn:hover { transform: scale(1.05); }
-        #boss-cache-badge {
-            position: fixed;
-            bottom: 74px;
-            left: 30px;
-            z-index: 99999;
-            background: rgba(0,0,0,0.75);
-            color: #fff;
-            padding: 4px 12px;
-            border-radius: 10px;
-            font-size: 12px;
-            pointer-events: none;
-        }
-        #boss-clear-btn {
-            position: fixed;
-            bottom: 30px;
-            left: 160px;
-            z-index: 99999;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            color: #fff;
-            background: #ff4d4f;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            transition: all 0.2s;
-        }
-        #boss-clear-btn:hover { transform: scale(1.05); }
     `);
 
     // ============================================================
     // UI
     // ============================================================
 
-    // --- 自动点击按钮 ---
-    const btn = document.createElement('button');
-    btn.id = 'boss-auto-btn';
-    btn.textContent = '▶ 开始自动点击';
+    // --- 控制面板 ---
+    const panel = document.createElement('div');
+    panel.id = 'boss-auto-panel';
+    panel.innerHTML = `
+        <div id="panel-header">
+            <h3>Boss 自动点击</h3>
+            <button id="toggle-panel-btn">_</button>
+        </div>
+        <div class="panel-body">
+            <button id="start-btn" class="boss-panel-btn">▶ 开始自动点击</button>
+            <button id="stop-btn" class="boss-panel-btn" style="display:none;">■ 停止点击</button>
+
+            <div class="toggle-row">
+                <label for="greet-toggle">自动点击立即沟通</label>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="greet-toggle">
+                    <span class="toggle-slider"></span>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="info-label">屏蔽公司关键词 (逗号分隔):</div>
+                <input type="text" id="filter-input" placeholder="例如: 外包,某某公司,派遣">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <button id="export-btn" class="boss-panel-btn">📦 导出JSON</button>
+                <button id="clear-btn" class="boss-panel-btn">🗑 清空缓存</button>
+            </div>
+            <div id="cache-count" style="text-align:center; font-size:12px; color:#999; margin-bottom:8px;">缓存: 0 条</div>
+            <div id="status-info">状态: 未运行 | 已处理: 0</div>
+        </div>
+    `;
+    document.body.appendChild(panel);
 
     const status = document.createElement('div');
     status.id = 'boss-auto-status';
     status.style.display = 'none';
-
-    document.body.appendChild(btn);
     document.body.appendChild(status);
 
+    const startBtn = document.getElementById('start-btn');
+    const stopBtn = document.getElementById('stop-btn');
+    const exportBtn = document.getElementById('export-btn');
+    const clearBtn = document.getElementById('clear-btn');
+    const greetToggle = document.getElementById('greet-toggle');
+    const filterInput = document.getElementById('filter-input');
+    const statusInfo = document.getElementById('status-info');
+    const header = document.getElementById('panel-header');
+    const togglePanelBtn = document.getElementById('toggle-panel-btn');
+
     function updateStatus(msg) {
-        status.textContent = msg;
+        statusInfo.textContent = `状态: ${msg} | 已处理: ${processedCount}`;
     }
-
-    // --- 导出按钮 + 清空按钮 + 缓存计数 ---
-    const exportBtn = document.createElement('button');
-    exportBtn.id = 'boss-export-btn';
-    exportBtn.textContent = '📦 导出JSON';
-
-    const clearBtn = document.createElement('button');
-    clearBtn.id = 'boss-clear-btn';
-    clearBtn.textContent = '🗑 清空缓存';
-
-    const cacheBadge = document.createElement('div');
-    cacheBadge.id = 'boss-cache-badge';
-
-    document.body.appendChild(exportBtn);
-    document.body.appendChild(clearBtn);
-    document.body.appendChild(cacheBadge);
 
     function updateBadge() {
         const items = JSON.parse(GM_getValue(STORAGE_KEY, '[]'));
-        cacheBadge.textContent = `缓存: ${items.length} 条`;
+        document.getElementById('cache-count').textContent = `缓存: ${items.length} 条`;
     }
     updateBadge();
+
+    // --- 面板折叠 ---
+    togglePanelBtn.addEventListener('click', () => {
+        const isCollapsed = panel.classList.toggle('collapsed');
+        togglePanelBtn.innerText = isCollapsed ? '□' : '_';
+    });
+
+    // --- 面板拖动 ---
+    let isDragging = false;
+    let dragOffset = { x: 0, y: 0 };
+    header.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        dragOffset = { x: e.clientX - panel.offsetLeft, y: e.clientY - panel.offsetTop };
+        e.preventDefault();
+    });
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        let left = e.clientX - dragOffset.x;
+        let top = e.clientY - dragOffset.y;
+        const maxLeft = window.innerWidth - panel.offsetWidth;
+        const maxTop = window.innerHeight - (panel.classList.contains('collapsed') ? 42 : panel.offsetHeight);
+        left = Math.max(0, Math.min(left, maxLeft));
+        top = Math.max(0, Math.min(top, maxTop));
+        panel.style.left = left + 'px';
+        panel.style.top = top + 'px';
+        panel.style.right = 'auto';
+    });
+    document.addEventListener('mouseup', () => { isDragging = false; });
+
+    // --- 加载/保存 打招呼开关 ---
+    greetToggle.checked = GM_getValue('boss_greet_enabled', false);
+    greetToggle.addEventListener('change', () => {
+        GM_setValue('boss_greet_enabled', greetToggle.checked);
+        console.log(`[Boss] 自动打招呼: ${greetToggle.checked ? '开启' : '关闭'}`);
+    });
+
+    // --- 加载/保存 屏蔽关键词 ---
+    filterInput.value = GM_getValue('boss_filter_keywords', '');
+    filterInput.addEventListener('change', () => {
+        GM_setValue('boss_filter_keywords', filterInput.value);
+        console.log(`[Boss] 屏蔽关键词已更新: ${filterInput.value}`);
+    });
 
     exportBtn.addEventListener('click', () => {
         const items = JSON.parse(GM_getValue(STORAGE_KEY, '[]'));
@@ -205,7 +340,6 @@
             alert('暂无缓存数据');
             return;
         }
-        // 只导出 data 字段，合并为一个数组
         const exportData = items.map(it => it.data);
         const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
         const a = document.createElement('a');
@@ -213,7 +347,6 @@
         a.download = 'detail.json';
         a.click();
         URL.revokeObjectURL(a.href);
-        // 导出后自动清空缓存
         GM_setValue(STORAGE_KEY, '[]');
         updateBadge();
         console.log(`[Boss导出] 已导出 ${items.length} 条并清空缓存`);
@@ -259,14 +392,13 @@
     }
 
     async function clickNextJob() {
-        let noNewRound = 0;       // 连续未加载到新卡片的轮数
-        const MAX_EMPTY_ROUNDS = 3; // 连续3次没新卡就结束
+        let noNewRound = 0;
+        const MAX_EMPTY_ROUNDS = 3;
 
         while (isRunning) {
             const jobCards = document.querySelectorAll('.job-card-box');
             const prevCount = jobCards.length;
 
-            // 处理当前所有未处理的卡片
             for (let i = 0; i < jobCards.length; i++) {
                 if (!isRunning) return;
 
@@ -277,8 +409,26 @@
                 processedCardIds.add(cardId);
 
                 const jobName = card.querySelector('.job-name')?.innerText || '未知职位';
-                const companyName = card.querySelector('.boss-name')?.innerText || '未知公司';
+                const companyName = card.querySelector('.company-name')?.innerText ||
+                                    card.querySelector('.company-info a span')?.innerText ||
+                                    card.querySelector('div:nth-of-type(2) > a > span')?.innerText || '未知公司';
                 const exp = card.querySelector('.tag-list li')?.innerText || '';
+
+                // --- 屏蔽公司关键词过滤 ---
+                const filterKeywords = filterInput.value.split(/[,，]/).map(k => k.trim()).filter(k => k);
+                let isFiltered = false;
+                for (const keyword of filterKeywords) {
+                    if (companyName.includes(keyword)) {
+                        isFiltered = true;
+                        break;
+                    }
+                }
+                if (isFiltered) {
+                    processedCount++;
+                    updateStatus(`[已屏蔽] ${companyName} - ${jobName}`);
+                    console.log(`[Boss屏蔽] ${processedCount}. ${companyName} | ${jobName} (命中关键词)`);
+                    continue;
+                }
 
                 card.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 await sleep(500);
@@ -289,21 +439,38 @@
                 console.log(`[Boss自动点击] ${processedCount}. ${companyName} | ${jobName} | ${exp}`);
 
                 await sleep(2000);
+
+                // --- 自动点击立即沟通（触发详情拦截） ---
+                if (greetToggle.checked) {
+                    try {
+                        const greetBtn = document.querySelector('.op-btn.op-btn-chat');
+                        if (greetBtn) {
+                            greetBtn.click();
+                            await sleep(1500);
+                            const cancelBtn = document.querySelector('.cancel-btn');
+                            if (cancelBtn) {
+                                cancelBtn.click();
+                                await sleep(1000);
+                            }
+                            console.log(`[Boss沟通] ${companyName} | ${jobName} - 已触发`);
+                        }
+                    } catch (e) {
+                        console.warn('[Boss沟通] 出错:', e);
+                    }
+                }
             }
 
             if (!isRunning) return;
 
-            // 检查是否所有卡片都已处理
             const allProcessed = [...document.querySelectorAll('.job-card-box')].every(card => {
                 const id = card.getAttribute('data-jobid') || card.innerText.substring(0, 50);
                 return processedCardIds.has(id);
             });
 
             if (allProcessed) {
-                // 滚动到底部触发加载下一批
                 updateStatus(`已处理 ${processedCount} 个，正在加载更多...`);
                 scrollToBottom();
-                await sleep(1500); // 等待网络请求
+                await sleep(1500);
 
                 const loaded = await waitForNewCards(prevCount);
                 if (!loaded) {
@@ -313,7 +480,6 @@
                         toggleRunning();
                         return;
                     }
-                    // 再试一次滚动（可能没触发）
                     scrollToBottom();
                     await sleep(2000);
                 } else {
@@ -329,19 +495,18 @@
     function toggleRunning() {
         isRunning = !isRunning;
         if (isRunning) {
-            btn.textContent = '■ 停止点击';
-            btn.classList.add('running');
-            status.style.display = 'block';
+            startBtn.style.display = 'none';
+            stopBtn.style.display = 'block';
             updateStatus('运行中...');
             clickNextJob();
         } else {
-            btn.textContent = '▶ 开始自动点击';
-            btn.classList.remove('running');
+            startBtn.style.display = 'block';
+            stopBtn.style.display = 'none';
             updateStatus(`已停止，共处理 ${processedCount} 个`);
-            setTimeout(() => { status.style.display = 'none'; }, 3000);
         }
     }
 
-    btn.addEventListener('click', toggleRunning);
+    startBtn.addEventListener('click', toggleRunning);
+    stopBtn.addEventListener('click', toggleRunning);
 
 })();
