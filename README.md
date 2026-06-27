@@ -26,6 +26,7 @@
   - [刷新 Cookie 配置](#刷新-cookie-配置)
 - [数据模型](#数据模型)
 - [scriptsCat — 脚本猫自动采集](#scriptscat--脚本猫自动采集)
+- [chromeExtension — Chrome 扩展自动采集](#chromeextension--chrome-扩展自动采集)
 - [架构说明](#架构说明)
   - [项目结构](#项目结构)
   - [模块职责](#模块职责)
@@ -242,6 +243,62 @@ python sqliteInit.py
 
 ---
 
+## chromeExtension — Chrome 扩展自动采集
+
+`chromeExtension/` 提供了与 scriptsCat 功能一致的 Chrome 原生扩展方案，无需安装 Tampermonkey 或脚本猫，直接以 Chrome 扩展形式加载即可使用。
+
+### 安装步骤
+
+1. Chrome 地址栏输入 `chrome://extensions` 并打开
+2. 开启右上角「**开发者模式**」
+3. 点击「**加载已解压的扩展程序**」→ 选择 `chromeExtension/` 文件夹
+4. 打开 BOSS 直聘职位页面（`www.zhipin.com/web/geek/jobs*`），页面右上角即可看到操作面板
+
+### 文件说明
+
+| 文件 | 说明 |
+|------|------|
+| `manifest.json` | 扩展配置（Manifest V3），声明权限、内容脚本、Service Worker |
+| `content.js` | 内容脚本，注入页面后提供操作面板、API 拦截、自动点击等核心功能 |
+| `background.js` | Service Worker，负责接收通知请求并调用 Chrome 通知 API |
+| `icons/` | 扩展图标（16/48/128px） |
+
+### 面板功能
+
+安装后访问 BOSS 直聘搜索页，页面**右上角**出现操作面板：
+
+- **▶ 开始自动点击** — 自动逐个点击职位卡片，触发详情 API 请求，支持无限滚动自动加载下一批
+- **自动点击立即沟通** — 开关控制，开启后点击职位时自动触发「立即沟通」再取消，确保详情数据被拦截
+- **屏蔽公司关键词** — 输入逗号分隔的关键词，命中时自动跳过该公司职位
+- **📦 导出JSON** — 将缓存的所有 `job/detail.json` 响应导出为 `detail.json` 文件，导出后自动清空缓存
+- **🗑 清空缓存** — 手动清空已拦截的数据
+
+面板支持**折叠**和**拖动**，设置（自动沟通开关、屏蔽关键词）会持久化到 `chrome.storage.local`。
+
+### 与 scriptsCat 的区别
+
+| 对比项 | chromeExtension | scriptsCat |
+|--------|----------------|------------|
+| 运行环境 | Chrome 原生扩展（Manifest V3） | Tampermonkey / ScriptCat 脚本管理器 |
+| 安装方式 | 加载已解压扩展程序 | 导入 `.js` 脚本 |
+| 数据存储 | `chrome.storage.local`（异步） | `localStorage`（同步） |
+| 通知方式 | Chrome 通知 API（后台弹窗） | `GM_notification` |
+| 面板位置 | 右上角（可拖动） | 右下角 |
+| 额外功能 | 公司关键词屏蔽、自动沟通开关 | — |
+
+导出的 `detail.json` 格式完全一致，均可通过 `scriptsCat/sqliteInit.py` 写入数据库。
+
+### 数据入库
+
+```bash
+cd scriptsCat
+python sqliteInit.py
+```
+
+用法与 scriptsCat 完全相同，详见上方 [数据入库](#数据入库) 章节。
+
+---
+
 ## 架构说明
 
 ### 项目结构
@@ -271,6 +328,11 @@ getData/
     ├── sqliteInit.py    # 将导出的 detail.json 写入 SQLite
     ├── detail.json      # 脚本导出的原始职位详情数据
     └── detail.db        # SQLite 数据库（职位/Boss/公司/关联四张表）
+├── chromeExtension/
+    ├── manifest.json    # Chrome 扩展配置（Manifest V3）
+    ├── content.js       # 内容脚本：面板 + API 拦截 + 自动点击
+    ├── background.js    # Service Worker：通知
+    └── icons/           # 扩展图标
 ```
 
 ### 模块职责

@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "Boss直聘自动点击",
+  "version": "1.0",
+  "description": "自动逐个点击职位卡片 + 拦截 job/detail.json 缓存并导出",
+  "permissions": [
+    "storage",
+    "notifications"
+  ],
+  "host_permissions": [
+    "*://www.zhipin.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://www.zhipin.com/web/geek/jobs*"],
+      "js": [
+        "src/storage.js",
+        "src/interceptor.js",
+        "src/styles.js",
+        "src/ui.js",
+        "src/core.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
